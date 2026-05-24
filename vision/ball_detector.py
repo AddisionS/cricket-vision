@@ -30,6 +30,10 @@ class BallDetector:
             242
         ])
 
+        # Real ball is small — reject anything bigger
+        self.min_radius = 3
+        self.max_radius = 8
+
     def detect(self, frame):
 
         hsv = cv.cvtColor(
@@ -75,79 +79,50 @@ class BallDetector:
 
         for contour in contours:
 
-            area = cv.contourArea(
-                contour
-            )
+            area = cv.contourArea(contour)
 
             if area < 15:
                 continue
 
-            perimeter = cv.arcLength(
-                contour,
-                True
-            )
+            perimeter = cv.arcLength(contour, True)
 
             if perimeter == 0:
                 continue
 
             circularity = (
-
                 4 * np.pi * area
-
             ) / (
-
                 perimeter * perimeter
             )
 
             if circularity < 0.65:
                 continue
 
-            (x, y), radius = cv.minEnclosingCircle(
-                contour
-            )
+            (x, y), radius = cv.minEnclosingCircle(contour)
 
             x = int(x)
             y = int(y)
-
             radius = int(radius)
 
-            if radius < 3:
+            if radius < self.min_radius or radius > self.max_radius:
                 continue
 
             x1 = x - radius
             y1 = y - radius
-
             x2 = x + radius
             y2 = y + radius
 
             balls.append({
-
                 "contour": contour,
-
-                "center": (
-                    x,
-                    y
-                ),
-
+                "center": (x, y),
                 "radius": radius,
-
-                "box": (
-                    x1,
-                    y1,
-                    x2,
-                    y2
-                ),
-
+                "box": (x1, y1, x2, y2),
                 "area": area,
-
                 "circularity": circularity
             })
 
         return {
-
             "detected": len(balls) > 0,
-
             "balls": balls,
-
             "mask": mask
         }
