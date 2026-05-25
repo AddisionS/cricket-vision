@@ -99,3 +99,7 @@ class TrackerManager:
         ]
 
         return confirmed
+    
+    def reset(self):
+        self.tracks = []
+        self.next_id = 0
