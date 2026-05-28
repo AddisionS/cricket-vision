@@ -2,7 +2,7 @@ from stable_baselines3 import PPO
 from cricket_env import CricketEnv
 
 env = CricketEnv()
-model = PPO.load("cricket_ppo", env=env)
+model = PPO.load("cricket_ppo_1M", env=env)
 
 obs, info = env.reset()
 

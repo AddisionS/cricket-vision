@@ -55,10 +55,7 @@ class VisionSystem:
         # Horizontal pixel columns to black out before
         # ball detection — covers the left and right
         # border strips that bleed into the HSV range
-        self.mask_columns = [
-            (0, 65),      # left border strip
-            (590, 640),   # right border strip
-        ]
+        self.mask_columns = []
 
     def crop(self, frame, roi):
 
@@ -141,25 +138,6 @@ class VisionSystem:
             "bat": bat_result,
             "balls": tracker_balls
         }
-    
-    def read_score(self, frame):
-        score_roi = frame[315:340, 260:310]
-        gray = cv.cvtColor(score_roi, cv.COLOR_BGR2GRAY)
-        _, thresh = cv.threshold(gray, 200, 255, cv.THRESH_BINARY)
-
-        import pytesseract
-        pytesseract.pytesseract.tesseract_cmd = (
-            r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-        )
-        text = pytesseract.image_to_string(
-            thresh,
-            config="--psm 7 -c tessedit_char_whitelist=0123456789"
-        )
-
-        try:
-            return int(text.strip().split()[0])
-        except: 
-            return None
         
     def reset(self):
         self.tracker_manager.reset()
