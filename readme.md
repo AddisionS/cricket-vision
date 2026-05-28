@@ -16,6 +16,14 @@ No game API or memory access is used.
 
 ---
 
+## Demo
+
+![RL Cricket Agent Demo](./assets/demo.jpg)
+
+> Full gameplay demos for trained models can be found in `/demos`.
+
+---
+
 # Features
 
 * Vision-only gameplay
